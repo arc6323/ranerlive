@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Зверотрасса",
+      "hasCanvas": true,
+      "bodyTextLen": 273,
+      "bodyTextHash": "f5b9215b57825fe89a01c894c8f9e0e8e2c879e026cb0410724858edfc7271bd",
+      "bodyTextPrefix": "БЕСКОНЕЧНЫЙ РАННЕР Зверотрасса Квадроцикл стоит. Свайп сдвигает ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Зверотрасса",
+      "hasCanvas": true,
+      "bodyTextLen": 273,
+      "bodyTextHash": "f5b9215b57825fe89a01c894c8f9e0e8e2c879e026cb0410724858edfc7271bd",
+      "bodyTextPrefix": "БЕСКОНЕЧНЫЙ РАННЕР Зверотрасса Квадроцикл стоит. Свайп сдвигает ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}
