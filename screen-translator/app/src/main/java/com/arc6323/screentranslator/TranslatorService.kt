@@ -6,8 +6,8 @@ import android.graphics.*
 import android.hardware.display.DisplayManager
 import android.media.*
 import android.media.projection.MediaProjection
+import android.media.projection.MediaProjectionManager
 import android.os.*
-import android.provider.Settings
 import android.view.*
 import android.widget.TextView
 import com.google.mlkit.nl.languageid.LanguageIdentification
@@ -44,19 +44,18 @@ class TranslatorService : Service() {
         val image = reader?.acquireLatestImage()
         if (image != null && !busy) {
             busy = true
-            val plane = image.planes[0]; val buffer = plane.buffer
+            val buffer = image.planes[0].buffer
             val bitmap = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
             bitmap.copyPixelsFromBuffer(buffer); image.close()
             val input = InputImage.fromBitmap(bitmap, 0)
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
             recognizer.process(input).addOnSuccessListener { result ->
                 clearOverlay()
-                val all = result.textBlocks.flatMap { it.lines }.take(30)
+                val lines = result.textBlocks.flatMap { it.lines }.take(30)
                 val lid = LanguageIdentification.getClient()
-                all.forEach { line ->
+                lines.forEach { line ->
                     lid.identifyLanguage(line.text).addOnSuccessListener { lang ->
-                        if (lang != "und" && lang != "ru" && lang != "en") translate(line, lang)
-                        else if (lang != "ru") translate(line, lang)
+                        if (lang != "und" && lang != "ru") translate(line, lang)
                     }
                 }
             }.addOnCompleteListener { recognizer.close(); bitmap.recycle(); busy = false; handler.postDelayed(::scan, 900) }
@@ -79,7 +78,11 @@ class TranslatorService : Service() {
         handler.post {
             val r = line.boundingBox ?: return@post
             val tv = TextView(this).apply {
-                this.text = text; setTextColor(Color.WHITE); setBackgroundColor(Color.argb(220, 20,20,20)); textSize = (r.height() * 0.72f).coerceAtLeast(10f); setPadding(4,0,4,0); gravity = Gravity.CENTER_VERTICAL; maxLines = 2
+                this.text = text
+                setTextColor(Color.WHITE)
+                setBackgroundColor(Color.argb(225, 20,20,20))
+                textSize = (r.height() * 0.72f).coerceAtLeast(10f)
+                setPadding(4,0,4,0); gravity = Gravity.CENTER_VERTICAL; maxLines = 2
             }
             val p = WindowManager.LayoutParams(r.width().coerceAtLeast(40), r.height().coerceAtLeast(24), WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.TRANSLUCENT)
             p.gravity = Gravity.TOP or Gravity.START; p.x = r.left; p.y = r.top
